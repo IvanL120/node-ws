@@ -1,48 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Network - Protect Earth</title>
+    <title>3D渲染 | 李奕彬的个人作品集</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* CSS变量定义 - 明亮模式 */
+        :root {
+            --primary-bg: #f8f9fa;
+            --secondary-bg: #ffffff;
+            --tertiary-bg: #f1f3f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #6c757d;
+            --accent-color: #3a86ff;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #06d6a0;
+            --border-color: #e9ecef;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --depth-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --depth-2: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+            --depth-3: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10);
+            --depth-4: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* CSS变量定义 - 黑暗模式 */
+        [data-theme="dark"] {
+            --primary-bg: #0f1419;
+            --secondary-bg: #1a1f2b;
+            --tertiary-bg: #1e2a3a;
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #64b5f6;
+            --accent-secondary: #a78bfa;
+            --accent-tertiary: #34d399;
+            --border-color: #333333;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(30, 41, 59, 0.18);
+            --depth-1: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.4);
+            --depth-2: 0 3px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+            --depth-3: 0 10px 20px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+            --depth-4: 0 15px 25px rgba(0, 0, 0, 0.4), 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #2e7d32;
-            --secondary: #4caf50;
-            --accent: #8bc34a;
-            --light: #e8f5e9;
-            --dark: #1b5e20;
-            --text: #333333;
-            --white: #ffffff;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
         }
 
         body {
-            background-color: var(--light);
-            color: var(--text);
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
             line-height: 1.6;
-        }
-
-        header {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-x: hidden;
         }
 
         .container {
-            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        /* 背景层样式 */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, var(--tertiary-bg) 100%);
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.03;
+            background-image: radial-gradient(var(--accent-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* 导航栏 */
+        header {
+            padding: 20px 0;
+            background-color: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--depth-1);
         }
 
         .nav-container {
@@ -52,667 +117,1474 @@
         }
 
         .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.8rem;
-            font-weight: 700;
         }
 
-        .logo i {
-            font-size: 2rem;
+        .logo-icon {
+            color: var(--accent-color);
         }
 
-        nav ul {
+        .logo img {
+            height: 30px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-menu {
             display: flex;
             list-style: none;
+            gap: 30px;
         }
 
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--white);
+        .nav-menu a {
+            color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
             position: relative;
+            padding: 5px 0;
         }
 
-        nav ul li a:hover {
-            color: var(--accent);
+        .nav-menu a:hover {
+            color: var(--text-primary);
         }
 
-        nav ul li a::after {
+        .nav-menu a::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
             width: 0;
             height: 2px;
-            background-color: var(--accent);
-            transition: width 0.3s ease;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s;
         }
 
-        nav ul li a:hover::after {
+        .nav-menu a:hover::after {
             width: 100%;
         }
 
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80');
-            background-size: cover;
-            background-position: center;
-            height: 80vh;
+        .nav-actions {
             display: flex;
             align-items: center;
-            text-align: center;
-            color: var(--white);
+            gap: 15px;
         }
 
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--tertiary-bg);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        /* 英雄区域 */
+        .hero {
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.05;
+            z-index: -1;
         }
 
         .hero h1 {
             font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
         }
 
         .hero p {
             font-size: 1.3rem;
-            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
 
         .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: var(--white);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
             border: none;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            box-shadow: var(--depth-2);
         }
 
         .btn:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: var(--depth-3);
         }
 
-        section {
-            padding: 5rem 0;
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        /* 作品展示区 */
+        .featured-works {
+            position: relative;
         }
 
         .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title h2 {
             font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
+            margin-bottom: 60px;
+            text-align: center;
             position: relative;
-            display: inline-block;
         }
 
-        .section-title h2::after {
+        .section-title::after {
             content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+            display: block;
             width: 80px;
             height: 4px;
-            background-color: var(--accent);
+            background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
+            margin: 15px auto 0;
             border-radius: 2px;
         }
 
-        .section-title p {
-            color: var(--text);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .about-content {
+        .works-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
-        .about-img {
-            border-radius: 10px;
+        .work-card,
+        .service-card {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .about-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-
-        .about-img:hover img {
-            transform: scale(1.05);
-        }
-
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-
-        .about-text p {
-            margin-bottom: 1.5rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem 1rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .stat-item i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .stat-item h3 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            color: var(--text);
-        }
-
-        .initiatives {
-            background-color: var(--white);
-        }
-
-        .initiatives-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .initiative-card {
-            background-color: var(--light);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .initiative-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .initiative-img {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .initiative-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .initiative-card:hover .initiative-img img {
-            transform: scale(1.1);
-        }
-
-        .initiative-content {
-            padding: 1.5rem;
-        }
-
-        .initiative-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .initiative-content p {
-            margin-bottom: 1.5rem;
-        }
-
-        .cta {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            text-align: center;
-            padding: 5rem 0;
-        }
-
-        .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta .btn {
-            background-color: var(--white);
-            color: var(--primary);
-        }
-
-        .cta .btn:hover {
-            background-color: var(--accent);
-            color: var(--white);
-        }
-
-        footer {
-            background-color: var(--dark);
-            color: var(--white);
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-column h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
+            box-shadow: var(--depth-2);
+            transition: all 0.3s ease;
             position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--accent);
-        }
-
-        .footer-column p {
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links li a {
-            color: var(--light);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links li a:hover {
-            color: var(--accent);
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
+            z-index: 1;
             cursor: pointer;
         }
 
-        @media (max-width: 992px) {
-            .about-content {
+        .work-card:hover,
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--depth-4);
+        }
+
+        /* 修改work-image为实际图片 */
+        .work-image {
+            width: 100%;
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .work-info,
+        .service-info {
+            padding: 25px;
+        }
+
+        .work-category,
+        .service-category {
+            display: inline-block;
+            padding: 5px 12px;
+            background-color: var(--tertiary-bg);
+            color: var(--accent-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .work-title,
+        .service-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .work-description,
+        .service-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .work-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .view-more-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 服务区域 */
+        .services {
+            background-color: var(--secondary-bg);
+            position: relative;
+        }
+
+        .services::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.03;
+            z-index: 0;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 服务项目回归最初版本，使用图标 */
+        .service-card {
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 12px;
+            background-color: var(--primary-bg);
+            box-shadow: var(--depth-1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--depth-3);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            color: var(--accent-color);
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .service-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* 关于与联系区域 */
+        .about-contact-section {
+            display: flex;
+            justify-content: center;
+        }
+
+        .about-contact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .about-image {
+            width: 100%;
+            height: 275px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: var(--depth-3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 50px;
+        }
+
+        .about-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .about-content h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
+            margin-top: 15px;
+            border-radius: 2px;
+        }
+
+        .about-content p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        /* 强调自我介绍文本 */
+        .about-intro {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .about-intro strong {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 0px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .skill-tag {
+            padding: 10px 16px;
+            background-color: var(--tertiary-bg);
+            border-radius: 20px;
+            font-size: 1.05rem;
+            color: var(--text-primary);
+        }
+
+        /* 联系方式新布局 - 水平排列 */
+        .contact-methods {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            margin-top: 10px;
+            justify-content: space-between;
+        }
+
+        .contact-method {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 40px 20px;
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            box-shadow: var(--depth-2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            min-height: 80px;
+            justify-content: center;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--depth-2);
+            background-color: var(--accent-color);
+        }
+
+        .contact-method:hover .method-text h3,
+        .contact-method:hover .method-text p {
+            color: white;
+        }
+
+        /* 修改图标悬停效果 - 在明亮模式下使用深色图标 */
+        [data-theme="light"] .contact-method:hover .method-icon {
+            color: var(--accent-secondary);
+            background-color: white;
+        }
+
+        [data-theme="dark"] .contact-method:hover .method-icon {
+            color: white;
+            background-color: var(--accent-secondary);
+        }
+
+        .method-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--tertiary-bg);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .method-text h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .method-text p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .contact-form {
+            background-color: var(--secondary-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--depth-2);
+        }
+
+        .contact-form h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .contact-form h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-color), var(--accent-secondary));
+            margin-top: 15px;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* 页脚 */
+        footer {
+            padding: 40px 0 20px;
+            background-color: var(--tertiary-bg);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--depth-4);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 25px 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 25px 30px;
+        }
+
+        .modal-description {
+            margin: 20px 0;
+            color: var(--text-secondary);
+        }
+
+        /* 报价单表格样式 */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--depth-1);
+        }
+
+        .pricing-table th,
+        .pricing-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pricing-table th {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .pricing-table tr:nth-child(even) {
+            background-color: var(--tertiary-bg);
+        }
+
+        .pricing-table tr:hover {
+            background-color: var(--primary-bg);
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        /* 注意事项样式 */
+        .notes-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--tertiary-bg);
+            border-radius: 8px;
+        }
+
+        .notes-section h3 {
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .notes-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .notes-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .notes-list li:before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+        }
+
+        /* 提示框样式 - 居中显示 */
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: var(--depth-3);
+            z-index: 1001;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* 移动端样式 */
+        @media (max-width: 1024px) {
+            .about-contact {
                 grid-template-columns: 1fr;
+                gap: 40px;
             }
-            
-            .initiatives-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
+
+            .hero h1 {
+                font-size: 2.8rem;
             }
         }
 
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+            .nav-menu {
+                display: none;
             }
-            
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
             .hero p {
                 font-size: 1.1rem;
             }
-            
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--primary);
-                flex-direction: column;
-                padding: 1rem 0;
-                text-align: center;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            }
-            
-            nav ul.active {
-                display: flex;
-            }
-            
-            nav ul li {
-                margin: 0;
-                padding: 0.8rem 0;
-            }
-            
-            .mobile-menu {
-                display: block;
-            }
-            
-            .initiatives-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
-        }
 
-        /* Animation for stats counter */
-        .counter {
-            transition: all 0.5s ease;
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .works-grid,
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .about-content h2,
+            .contact-form h2 {
+                font-size: 2rem;
+            }
+
+            .contact-form {
+                padding: 25px;
+            }
+
+            /* 移动端联系方式垂直排列 */
+            .contact-methods {
+                flex-direction: column;
+            }
+
+            /* 移动端表格样式 */
+            .pricing-table {
+                display: block;
+                overflow-x: auto;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Header -->
+    <style>
+        /* 在站点提示模态内为标题增加左右空白边缘 */
+        .modal-description {
+            padding: 0 24px;
+            box-sizing: border-box;
+        }
+
+        /* 对较窄屏幕稍微增大内边距以避免边缘贴合 */
+        @media (max-width: 480px) {
+            .modal-description {
+                padding: 0 16px;
+            }
+        }
+    </style>
+    <!-- 背景层 -->
+    <div class="bg-layer"></div>
+    <div class="bg-pattern"></div>
+
+    <!-- 导航栏 -->
     <header>
         <div class="container nav-container">
-            <div class="logo">
-                <i class="fas fa-seedling"></i>
-                <span>Green Network</span>
-            </div>
-            <nav>
-                <div class="mobile-menu">
+            <a href="#" class="logo">
+                <img src="/data/logo-icon.png" alt="logo">
+                李奕彬
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#works">精选作品</a></li>
+                <li><a href="#services">服务项目</a></li>
+                <li><a href="#about-contact">联系方式</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
-                </div>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#initiatives">Initiatives</a></li>
-                    <li><a href="#get-involved">Get Involved</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container hero-content">
-            <h1>Protect Our Planet, Preserve Our Future</h1>
-            <p>Join the global movement to create a sustainable world through conservation, education, and community action.</p>
-            <a href="#get-involved" class="btn">Join Our Network</a>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
+    <!-- 英雄区域 -->
+    <section class="hero">
         <div class="container">
-            <div class="section-title">
-                <h2>About Green Network</h2>
-                <p>We are a global community dedicated to environmental protection and sustainable development.</p>
-            </div>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Team planting trees">
-                </div>
-                <div class="about-text">
-                    <h3>Our Mission</h3>
-                    <p>Green Network is committed to creating a sustainable future by protecting natural ecosystems, promoting renewable energy, and empowering communities to take environmental action.</p>
-                    <p>Founded in 2010, we've grown from a small grassroots organization to an international network with over 50,000 members across 120 countries.</p>
-                    <p>Our approach combines scientific research, community engagement, and policy advocacy to address the most pressing environmental challenges of our time.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-tree"></i>
-                    <h3 class="counter" data-target="2500000">0</h3>
-                    <p>Trees Planted</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-users"></i>
-                    <h3 class="counter" data-target="50000">0</h3>
-                    <p>Active Members</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3 class="counter" data-target="120">0</h3>
-                    <p>Countries Reached</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-recycle"></i>
-                    <h3 class="counter" data-target="1500">0</h3>
-                    <p>Cleanup Projects</p>
-                </div>
+            <h1>艺术与科技的交汇点</h1>
+            <p>探索我的创意项目，体验视觉享受和内容表达的完美融合</p>
+            <div class="hero-buttons">
+                <a href="#works" class="btn">
+                    <i class="fas fa-eye"></i>
+                    浏览作品
+                </a>
+                <a href="#about-contact" class="btn btn-outline">
+                    <i class="fas fa-paper-plane"></i>
+                    联系合作
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Initiatives Section -->
-    <section class="initiatives" id="initiatives">
+    <!-- 精选作品区域 -->
+    <section class="featured-works" id="works">
         <div class="container">
-            <div class="section-title">
-                <h2>Our Initiatives</h2>
-                <p>Discover the key programs and projects we're implementing to protect our planet.</p>
+            <h2 class="section-title">精选作品</h2>
+            <div class="works-grid">
+                <div class="work-card view-detail-btn" data-project="1">
+                    <div class="work-image"
+                        style="background-image: url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80')">
+                    </div>
+                    <div class="work-info">
+                        <span class="work-category">科研绘图</span>
+                        <h3 class="work-title">分子结构可视化</h3>
+                        <p class="work-description">为科学期刊设计的分子结构可视化项目，将复杂的化学结构转化为直观的视觉表达。</p>
+                        <div class="work-link">
+                            查看详情
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-card view-detail-btn" data-project="2">
+                    <div class="work-image"
+                        style="background-image: url('https://images.unsplash.com/photo-1560415751-3f57f3d2c891?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80')">
+                    </div>
+                    <div class="work-info">
+                        <span class="work-category">商品渲染</span>
+                        <h3 class="work-title">电子产品渲染</h3>
+                        <p class="work-description">为科技公司创建的产品渲染图，突出产品特点并提升视觉吸引力。</p>
+                        <div class="work-link">
+                            查看详情
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="work-card view-detail-btn" data-project="3">
+                    <div class="work-image"
+                        style="background-image: url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80')">
+                    </div>
+                    <div class="work-info">
+                        <span class="work-category">人偶定制</span>
+                        <h3 class="work-title">奇幻角色设计</h3>
+                        <p class="work-description">为游戏公司设计的奇幻角色3D模型，注重细节和角色个性的表达。</p>
+                        <div class="work-link">
+                            查看详情
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="initiatives-grid">
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://dialogue.earth/content/uploads/2021/04/lessons-from-the-rush-to-reforest-china-dialogue-2400x1599.jpg" alt="Reforestation">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Global Reforestation</h3>
-                        <p>Planting millions of trees worldwide to restore ecosystems, combat climate change, and protect biodiversity.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Ocean Conservation">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Ocean Conservation</h3>
-                        <p>Protecting marine ecosystems, reducing plastic pollution, and promoting sustainable fishing practices.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Renewable Energy">
-                    </div>
-                    <div class="initiative-content">
-                        <h3>Renewable Energy</h3>
-                        <p>Promoting solar, wind, and other clean energy sources to reduce dependence on fossil fuels.</p>
-                        <a href="#" class="btn">Learn More</a>
-                    </div>
-                </div>
+            <!-- <div class="view-more-container">
+                <a href="projects.html" class="btn btn-outline">
+                    <i class="fas fa-plus"></i>
+                    查看更多作品
+                </a>
             </div>
-        </div>
+        </div> -->
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta" id="get-involved">
+    <!-- 服务区域 -->
+    <section class="services" id="services">
         <div class="container">
-            <h2>Join Our Global Movement</h2>
-            <p>Together, we can create a sustainable future for generations to come. Every action counts, no matter how small.</p>
-            <a href="#" class="btn">Become a Member</a>
+            <h2 class="section-title">服务项目</h2>
+            <div class="services-grid">
+                <div class="service-card service-detail-btn" data-service="1">
+                    <div class="service-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3 class="service-title">科研绘图</h3>
+                    <p class="service-description">概念图与封面设计、科学可视化表达，将复杂科学概念转化为直观视觉语言。</p>
+                    <div class="service-link">
+                        查看详情
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="service-card service-detail-btn" data-service="2">
+                    <div class="service-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3 class="service-title">商品渲染</h3>
+                    <p class="service-description">电商产品宣传、动效传媒设计，提升产品视觉吸引力和市场竞争力。</p>
+                    <div class="service-link">
+                        查看详情
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                <div class="service-card service-detail-btn" data-service="3">
+                    <div class="service-icon">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <h3 class="service-title">人偶定制</h3>
+                    <p class="service-description">人设定制与建模、3D人偶产品制作，创造独特个性角色形象。</p>
+                    <div class="service-link">
+                        查看详情
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer id="contact">
+    <!-- 关于与联系区域 -->
+    <section class="about-contact-section" id="about-contact">
+        <div class="container">
+            <div class="about-contact">
+                <!-- 左侧：关于我 -->
+                <div class="about-content">
+                    <h2>关于我</h2>
+                    <div class="about-image"
+                        style="background-image: url('/data/selfie.png'); background-size:cover; background-position: center; background-repeat: no-repeat; min-height: 360px; max-width: 1000px; margin: 0 auto;">
+                    </div>
+                    <!-- 技能标签 -->
+                    <div class="skills">
+                        <span class="skill-tag">理学博士</span>
+                        <span class="skill-tag">科研可视化</span>
+                        <span class="skill-tag">3D建模</span>
+                        <span class="skill-tag">产品渲染</span>
+                        <span class="skill-tag">概念设计</span>
+                    </div>
+                </div>
+
+                <!-- 右侧：联系我（表单） -->
+                <div class="about-content contact-column">
+                    <p class="about-intro">
+                        我是李奕彬，专注于视觉艺术与数字媒体。
+                    </p>
+                    <p class="about-intro">
+                        我的创作融合了科学精确性与艺术表现力，致力于通过视觉语言讲述故事、传达理念。
+                    </p>
+                    <p class="about-intro">
+                        拥有多年的科研绘图、商品渲染和人偶定制经验，我擅长将抽象概念转化为引人入胜的视觉体验，为客户提供独特而专业的视觉解决方案。
+                    </p>
+                    <h4 class="about-intro">有项目合作或疑问？请随时联系我，我会尽快回复。<h4>
+
+                            <div class="contact-methods">
+                                <div class="contact-method" id="douyin-contact">
+                                    <div class="method-icon">
+                                        <i class="fab fa-tiktok"></i>
+                                    </div>
+                                    <div class="method-text">
+                                        <h4>@彬彬亦有礼</h4>
+                                        <p>抖音</p>
+                                    </div>
+                                </div>
+                                <div class="contact-method" id="email-contact">
+                                    <div class="method-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="method-text">
+                                        <h4>liyibin_3design@163.com</h4>
+                                        <p>邮箱</p>
+
+                                    </div>
+                                </div>
+                                <div class="contact-method" id="xiaohongshu-contact">
+                                    <div class="method-icon">
+                                        <img src="https://play-lh.googleusercontent.com/o4qWb7cqEHfygA2fHl_VhBHqWx9InSd7rlaAMe7ktDuQTxh2Bm7B6auL3zZ5ibLmTWs=w240-h480-rw"
+                                            alt="小红书" style="width:24px; height:24px;">
+                                    </div>
+                                    <div class="method-text">
+                                        <h4>@彬彬亦有礼</h4>
+                                        <p>小红书</p>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Green Network</h3>
-                    <p>We are dedicated to protecting our planet through collaborative action, education, and sustainable solutions.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#initiatives">Initiatives</a></li>
-                        <li><a href="#get-involved">Get Involved</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Our Programs</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Reforestation</a></li>
-                        <li><a href="#">Ocean Cleanup</a></li>
-                        <li><a href="#">Wildlife Protection</a></li>
-                        <li><a href="#">Climate Education</a></li>
-                        <li><a href="#">Sustainable Agriculture</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Copper Creek Drive, New York</p>
-                    <p><i class="fas fa-phone"></i> +1 (312) 171-0771</p>
-                    <p><i class="fas fa-envelope"></i> support@greennetwork.org</p>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 Green Network. All rights reserved.</p>
+                <a href="#" class="logo">
+                    <img src="/data/logo-icon.png" alt="logo">
+                    李奕彬 </a>
+                <p class="copyright">李奕彬 © 2025 版权所有</p>
             </div>
         </div>
     </footer>
 
+    <!-- 项目详情模态框 -->
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalProjectTitle">项目详情</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-images" id="projectImages">
+                    <!-- 图片将通过JavaScript动态添加 -->
+                </div>
+                <p class="modal-description" id="modalProjectDescription">这里是项目详细内容的展示区域。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 服务详情模态框 -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalServiceTitle">服务详情</h2>
+                <button class="modal-close" id="serviceModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="servicePricing">
+                    <!-- 报价单表格将通过JavaScript动态添加 -->
+                </div>
+                <div id="serviceNotes">
+                    <!-- 注意事项将通过JavaScript动态添加 -->
+                </div>
+                <p class="modal-description" id="modalServiceDescription">这里是服务详细内容的展示区域。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 站点提示模态框 -->
+    <div class="modal" id="siteNoticeModal" aria-hidden="true" role="dialog" aria-labelledby="siteNoticeTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="siteNoticeTitle">温馨提示</h2>
+                <button class="modal-close" id="siteNoticeClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-header">
+                <h2 class="modal-description">非常抱歉，本网站尚未正式运营，商业合作请联系 <a
+                        href="mailto:liyibin_3design@163.com">liyibin_3design@163.com</a>，谢谢!</h2>
+                <div style="padding:0 30px 30px; display:flex; gap:12px;">
+                    <button class="btn" id="siteNoticeOk">知道了</button>
+                    <button class="btn btn-outline" id="siteNoticeDontShow">不再显示</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示框 - 居中显示 -->
+    <div class="toast" id="toast">已复制邮箱地址</div>
+
     <script>
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            document.querySelector('nav ul').classList.toggle('active');
+        // 主题切换功能
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        // 应用保存的主题
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateToggleButton(currentTheme);
+
+        // 切换主题
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateToggleButton(newTheme);
         });
 
-        // Counter Animation
-        function animateCounters() {
-            const counters = document.querySelectorAll('.counter');
-            const speed = 200; // The lower the slower
-            
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                
-                const inc = target / speed;
-                
-                if(count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(animateCounters, 1);
-                } else {
-                    counter.innerText = target;
+        // 站点提示逻辑：由站主配置显示方式
+        (function () {
+            const KEY = 'site_notice_shown_v1';
+            const modal = document.getElementById('siteNoticeModal');
+            const closeBtn = document.getElementById('siteNoticeClose');
+            const okBtn = document.getElementById('siteNoticeOk');
+            const dontShowBtn = document.getElementById('siteNoticeDontShow');
+
+            // 站主在这里设置提示显示方式
+            const NOTICE_CONFIG = {
+                showType: 'always'  // 'once': 仅首次显示, 'always': 每次显示
+            };
+
+            function show() {
+                if (modal) {
+                    modal.style.display = 'flex';
+                    modal.setAttribute('aria-hidden', 'false');
+                }
+            }
+
+            function hide() {
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                }
+            }
+
+            function markShown() {
+                if (NOTICE_CONFIG.showType === 'once') {
+                    try {
+                        localStorage.setItem(KEY, 'true');
+                    } catch (e) {
+                        // ignore
+                    }
+                }
+            }
+
+            // 页面加载后根据配置显示
+            window.addEventListener('load', function () {
+                if (NOTICE_CONFIG.showType === 'always' || !localStorage.getItem(KEY)) {
+                    setTimeout(show, 200);
                 }
             });
+
+            [closeBtn, okBtn, dontShowBtn].forEach(btn => {
+                if (!btn) return;
+                btn.addEventListener('click', function () {
+                    markShown();
+                    hide();
+                });
+            });
+
+            // 点击遮罩也视为已阅并关闭
+            window.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    markShown();
+                    hide();
+                }
+            });
+        })();
+
+        function updateToggleButton(theme) {
+            if (theme === 'light') {
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                themeIcon.className = 'fas fa-sun';
+            }
         }
 
-        // Initialize counters when page loads
-        window.addEventListener('load', animateCounters);
+        // 移动端菜单功能
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.querySelector('.nav-menu');
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // 项目详情模态框
+        const viewDetailBtns = document.querySelectorAll('.view-detail-btn');
+        const projectModal = document.getElementById('projectModal');
+        const modalClose = document.getElementById('modalClose');
+        const modalProjectTitle = document.getElementById('modalProjectTitle');
+        const modalProjectDescription = document.getElementById('modalProjectDescription');
+        const projectImages = document.getElementById('projectImages');
+
+        // 项目数据 - 包含图片URL
+        const projectData = {
+            1: {
+                title: "分子结构可视化",
+                description: "这是一个为科学期刊设计的分子结构可视化项目。我们使用先进的3D渲染技术，将复杂的化学结构转化为直观的视觉表达。该项目包含多个分子模型的可视化，以及交互式探索功能。",
+                images: [
+                    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                ]
+            },
+            2: {
+                title: "电子产品渲染",
+                description: "为科技公司创建的产品渲染图系列，突出产品特点并提升视觉吸引力。我们使用了高质量的材料渲染和光影效果，展示了产品在不同环境下的外观和质感。",
+                images: [
+                    "https://images.unsplash.com/photo-1560415751-3f57f3d2c891?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1560415751-3f57f3d2c891?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1560415751-3f57f3d2c891?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                ]
+            },
+            3: {
+                title: "奇幻角色设计",
+                description: "为游戏公司设计的奇幻角色3D模型系列，注重细节和角色个性的表达。每个角色都有独特的外观特征、服装设计和配饰，符合游戏世界观设定。",
+                images: [
+                    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+                    "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                ]
+            }
+        };
+
+        viewDetailBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+                const projectId = btn.getAttribute('data-project');
+                const project = projectData[projectId];
+
+                if (project) {
+                    modalProjectTitle.textContent = project.title;
+                    modalProjectDescription.textContent = project.description;
+
+                    // 清空之前的图片
+                    projectImages.innerHTML = '';
+
+                    // 添加新图片
+                    project.images.forEach(imgSrc => {
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'modal-image';
+                        imgDiv.style.backgroundImage = `url('${imgSrc}')`;
+                        projectImages.appendChild(imgDiv);
+                    });
+
+                    projectModal.style.display = 'flex';
+                }
+            });
+        });
+
+        modalClose.addEventListener('click', () => {
+            projectModal.style.display = 'none';
+        });
+
+        // 服务详情模态框
+        const serviceDetailBtns = document.querySelectorAll('.service-detail-btn');
+        const serviceModal = document.getElementById('serviceModal');
+        const serviceModalClose = document.getElementById('serviceModalClose');
+        const modalServiceTitle = document.getElementById('modalServiceTitle');
+        const modalServiceDescription = document.getElementById('modalServiceDescription');
+        const servicePricing = document.getElementById('servicePricing');
+        const serviceNotes = document.getElementById('serviceNotes');
+
+        // 服务数据 - 包含报价单和注意事项
+        const serviceData = {
+            1: {
+                title: "科研绘图",
+                description: "科研绘图服务专注于科学概念图、期刊封面设计、数据可视化等业务。我拥有985高校理学博士学位和专业的艺术设计能力，能够将复杂的科学概念转化为清晰、美观的视觉表达。",
+                pricing: [
+                    { service: "动态数据可视化图表", price: "100起" },
+                    { service: "独立示意模型", price: "200起" },
+                    { service: "科学概念程图设计", price: "800起" },
+                    { service: "科研海报设计", price: "1200起" },
+                    { service: "期刊封面设计", price: "1500起" },
+                    { service: "科研论文首图设计", price: "2500起" }
+                ],
+                notes: [
+                    "所有作品均为本人制作，无版权纠纷问题，可以协助申请专利、版权和商标等",
+                    "所有报价均为基础价格，具体费用根据项目复杂度和时间要求调整",
+                    "客户需提供详细的需求说明和参考资料，必要时应提供参考图，以确保设计符合预期",
+                    "项目周期通常为3-10个工作日，加急项目需额外支付30%费用",
+                    "提供3次免费修改机会，超出部分按每小时¥50收费",
+                    "最终交付格式包括AI、PSD、PDF和高分辨率PNG等常用图片格式，工程文件可额外付费购买"
+                ]
+            },
+            2: {
+                title: "商品渲染",
+                description: "商品渲染服务专注于为电商和市场营销提供高质量的产品视觉效果。我将用先进的3D渲染技术，创建逼真的产品图像和动画，帮助客户提升产品吸引力和销售转化率。",
+                pricing: [
+                    { service: "产品模型制作", price: "200起" },
+                    { service: "产品静态渲染图", price: "500起" },
+                    { service: "产品使用场景渲染", price: "1200起" },
+                    { service: "产品360度展示", price: "1500起" },
+                    { service: "电商主图套图(5张)", price: "2000起" },
+                    { service: "产品动画展示", price: "3000起" }
+                ],
+                notes: [
+                    "所有报价均为基础价格，实际价格将根据产品复杂度和渲染质量要求调整",
+                    "客户需提供产品OBJ、FBX等通用3D模型文件或详细尺寸图纸",
+                    "标准交付周期为5-21个工作日",
+                    "包含2次免费细节修改，重大修改需额外收费，每小时¥80",
+                    "最终交付格式包括JPG、PNG、MP4等常用格式，工程文件暂不提供",
+                    "所有作品均为本人制作，无版权纠纷问题，可以协助申请专利、版权和商标等"
+
+                ]
+            },
+            3: {
+                title: "人偶定制",
+                description: "提供从概念设计到3D建模的完整人偶定制服务。无论是游戏角色、动漫人物还是个性化定制需求，我都能创造出独特、精美的3D人偶模型。",
+                pricing: [
+                    { service: "角色设定协助设计", price: "100起" },
+                    { service: "Q版3D人偶建模", price: "500起" },
+                    { service: "贴图与材质制作", price: "700起" },
+                    { service: "3D打印人偶制作(基础姿势)", price: "1000起" },
+                    { service: "3D打印人偶制作(多姿势)", price: "1500起" },
+                    { service: "多个角色制作套餐", price: "3000起" }
+                ],
+                notes: [
+                    "未成年请在监护人认同后下单，拍下后概不退换，请谨慎考虑",
+                    "所有报价均为基础价格，各项服务已包含上级服务内容，实际价格将根据产品复杂度和实物大小调整",
+                    "项目周期根据复杂度从2周到3个月不等，工期将根据产品质量要求调整",
+                    "客户应提供详细的角色文本设定，并可提供参考图辅助描述，以确保设计符合预期",
+                    "人物白模和姿势设计阶段各提供3次免费的修改机会，其他阶段仅提供有限次免费的细节调整，额外的调整可付费购买",
+                    "最终交付格式仅包括包括JPG、PNG、MP4等常用格式以及OBJ、FBX等通用3D格式，工程文件暂不提供",
+                    "所有作品均为本人制作，无版权纠纷问题，可以协助申请专利、版权和商标等"
+                ]
+            }
+        };
+
+        serviceDetailBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const serviceId = btn.getAttribute('data-service');
+                const service = serviceData[serviceId];
+
+                if (service) {
+                    modalServiceTitle.textContent = service.title;
+                    modalServiceDescription.textContent = service.description;
+
+                    // 清空之前的内容
+                    servicePricing.innerHTML = '';
+                    serviceNotes.innerHTML = '';
+
+                    // 添加报价单表格
+                    if (service.pricing && service.pricing.length > 0) {
+                        const pricingTable = document.createElement('table');
+                        pricingTable.className = 'pricing-table';
+
+                        // 创建表头
+                        const thead = document.createElement('thead');
+                        const headerRow = document.createElement('tr');
+                        const serviceHeader = document.createElement('th');
+                        serviceHeader.textContent = '服务项目';
+                        const priceHeader = document.createElement('th');
+                        priceHeader.textContent = '价格(CNY)';
+
+                        headerRow.appendChild(serviceHeader);
+                        headerRow.appendChild(priceHeader);
+                        thead.appendChild(headerRow);
+                        pricingTable.appendChild(thead);
+
+                        // 创建表格主体
+                        const tbody = document.createElement('tbody');
+                        service.pricing.forEach(item => {
+                            const row = document.createElement('tr');
+                            const serviceCell = document.createElement('td');
+                            serviceCell.textContent = item.service;
+                            const priceCell = document.createElement('td');
+                            priceCell.className = 'price';
+                            priceCell.textContent = item.price;
+
+                            row.appendChild(serviceCell);
+                            row.appendChild(priceCell);
+                            tbody.appendChild(row);
+                        });
+                        pricingTable.appendChild(tbody);
+
+                        servicePricing.appendChild(pricingTable);
+                    }
+
+                    // 添加注意事项
+                    if (service.notes && service.notes.length > 0) {
+                        const notesSection = document.createElement('div');
+                        notesSection.className = 'notes-section';
+
+                        const notesTitle = document.createElement('h3');
+                        notesTitle.textContent = '注意事项';
+                        notesSection.appendChild(notesTitle);
+
+                        const notesList = document.createElement('ul');
+                        notesList.className = 'notes-list';
+
+                        service.notes.forEach(note => {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = note;
+                            notesList.appendChild(listItem);
+                        });
+
+                        notesSection.appendChild(notesList);
+                        serviceNotes.appendChild(notesSection);
+                    }
+
+                    serviceModal.style.display = 'flex';
+                }
+            });
+        });
+
+        serviceModalClose.addEventListener('click', () => {
+            serviceModal.style.display = 'none';
+        });
+
+        // 关闭模态框（点击外部区域）
+        window.addEventListener('click', (e) => {
+            if (e.target === projectModal) {
+                projectModal.style.display = 'none';
+            }
+            if (e.target === serviceModal) {
+                serviceModal.style.display = 'none';
+            }
+        });
+
+        // 联系信息交互功能
+        const emailContact = document.getElementById('email-contact');
+        const xiaohongshuContact = document.getElementById('xiaohongshu-contact');
+        const douyinContact = document.getElementById('douyin-contact');
+        const toast = document.getElementById('toast');
+
+        // 邮箱复制功能
+        emailContact.addEventListener('click', () => {
+            const email = 'liyibin_3design@163.com';
+            navigator.clipboard.writeText(email).then(() => {
+                // 显示提示
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败: ', err);
+            });
+        });
+
+        // 小红书跳转
+        xiaohongshuContact.addEventListener('click', () => {
+            window.open('https://xhslink.com/m/2bnxI7L1nCP', '_blank');
+        });
+
+        // 抖音跳转
+        douyinContact.addEventListener('click', () => {
+            window.open('https://v.douyin.com/I_yYNxi8Wxk', '_blank');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
                 const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
+                if (targetId === '#') return;
+
                 const targetElement = document.querySelector(targetId);
-                if(targetElement) {
+                if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    document.querySelector('nav ul').classList.remove('active');
+
+                    // 移动端点击后关闭菜单
+                    if (window.innerWidth <= 768) {
+                        navMenu.style.display = 'none';
+                    }
                 }
             });
         });
